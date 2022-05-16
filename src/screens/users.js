@@ -1,12 +1,22 @@
 //React Native import
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+
+//Custom Components import
+import User from "../components/User";
 
 const UsersPage = () => {
   return (
-    <View>
-      <Text>This is the users page</Text>
+    <View style={styles.container}>
+      <User />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+});
 
 export default UsersPage;
