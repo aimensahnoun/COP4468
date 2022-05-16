@@ -9,10 +9,17 @@ import User from "../components/User";
 import LoadingSpinner from "../components/loadingSpinner";
 import CustomText from "../components/CustomText";
 
+//Recoil import
+import { useRecoilState } from "recoil";
+import {UsersState} from "../recoil/state"
+
 const UsersPage = ({ navigation }) => {
   //Use State
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  //Recoil state
+  const [_usersState, setUsersState] = useRecoilState(UsersState);
 
   //Use Effect
   useEffect(() => {
@@ -23,6 +30,7 @@ const UsersPage = ({ navigation }) => {
         );
         const data = await response.json();
         setUsers(data);
+        setUsersState(data);
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
