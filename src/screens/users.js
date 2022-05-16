@@ -1,14 +1,18 @@
+
+
 //React Native import
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 
 //Custom Components import
 import User from "../components/User";
 
 const UsersPage = () => {
   return (
-    <View style={styles.container}>
-      <User />
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <User />
+      </View>
+    </ScrollView>
   );
 };
 
