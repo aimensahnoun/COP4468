@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 //React Native import
-import { View, StyleSheet, ScrollView, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 
 //Custom Components import
 import User from "../components/User";
@@ -11,7 +11,7 @@ import CustomText from "../components/CustomText";
 
 //Recoil import
 import { useRecoilState } from "recoil";
-import {UsersState} from "../recoil/state"
+import { UsersState } from "../recoil/state";
 
 const UsersPage = ({ navigation }) => {
   //Use State
@@ -22,9 +22,11 @@ const UsersPage = ({ navigation }) => {
   const [_usersState, setUsersState] = useRecoilState(UsersState);
 
   //Use Effect
+  /* Fetching data from the API and setting the state. Recoil state is used for other places */
   useEffect(() => {
     (async () => {
       try {
+        
         const response = await fetch(
           "https://jsonplaceholder.typicode.com/users"
         );
@@ -41,6 +43,10 @@ const UsersPage = ({ navigation }) => {
   }, []);
 
   //Helper functions
+  /**
+   * The renderItem function takes in an object with a key of item, and returns a User component with
+   * the name, username, navigation, and id props
+   */
   const renderItem = ({ item }) => (
     <User
       name={item.name}
@@ -60,6 +66,7 @@ const UsersPage = ({ navigation }) => {
         fontWeight="bold"
         fontSize={20}
         style={{
+          marginTop: 20,
           marginHorizontal: 20,
         }}
       >
@@ -80,12 +87,5 @@ const UsersPage = ({ navigation }) => {
     <LoadingSpinner />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-});
 
 export default UsersPage;
