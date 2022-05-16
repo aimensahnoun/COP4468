@@ -10,6 +10,8 @@ const CustomText = ({
 }) => {
   return (
     <Text
+      numberOfLines={1}
+      ellipsizeMode="tail"
       style={[
         {
           fontFamily:

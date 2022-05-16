@@ -7,8 +7,9 @@ import { View, FlatList } from "react-native";
 //Custom Components import
 import CustomText from "../components/CustomText";
 import LoadingSpinner from "../components/loadingSpinner";
+import Post from "../components/Post";
 
-const PostsPage = () => {
+const PostsPage = ({navigation}) => {
   //Use State
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +35,7 @@ const PostsPage = () => {
   }, []);
 
   //Helper functions
-  const renderItem = ({ item }) => <CustomText>{item.title}</CustomText>;
+  const renderItem = ({ item }) => <Post id={item.id} navigation={navigation} title={item.title} writerId={item.userId} />;
 
   return !isLoading ? (
     <View>
@@ -51,7 +52,7 @@ const PostsPage = () => {
 
       <FlatList
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingBottom: 150,
         }}
         showsVerticalScrollIndicator={false}
         data={posts}
