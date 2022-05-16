@@ -9,10 +9,17 @@ import CustomText from "../components/CustomText";
 import LoadingSpinner from "../components/loadingSpinner";
 import Post from "../components/Post";
 
-const PostsPage = ({navigation}) => {
+//Recoil import
+import { useRecoilState } from "recoil";
+import { postState } from "../recoil/state";
+
+const PostsPage = ({ navigation }) => {
   //Use State
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  //Recoil state
+  const [_postsState, setPostsState] = useRecoilState(postState);
 
   //Use Effect
   /* Fetching data from the API and setting the state. Recoil state is used for other places */
@@ -26,6 +33,7 @@ const PostsPage = ({navigation}) => {
         //Limiting the number of posts to 20
         const customData = data.slice(0, 20);
         setPosts(customData);
+        setPostsState(data);
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
@@ -35,7 +43,14 @@ const PostsPage = ({navigation}) => {
   }, []);
 
   //Helper functions
-  const renderItem = ({ item }) => <Post id={item.id} navigation={navigation} title={item.title} writerId={item.userId} />;
+  const renderItem = ({ item }) => (
+    <Post
+      id={item.id}
+      navigation={navigation}
+      title={item.title}
+      writerId={item.userId}
+    />
+  );
 
   return !isLoading ? (
     <View>
