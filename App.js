@@ -7,6 +7,9 @@ import { RecoilRoot } from "recoil";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+//Custom Components import
+import CustomText from "./src/components/CustomText";
+
 //Expo import
 import {
   useFonts,
@@ -38,69 +41,81 @@ export default function App() {
 const Tab = createBottomTabNavigator();
 
 function MyApp() {
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-          tabBarShowLabel: false,
+  let [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_700Bold,
+  });
 
-          tabBarStyle: [
-            {
-              position: "absolute",
-              left: 60,
-              right: 60,
-              bottom: 20,
-              borderRadius: 15,
-              height: 70,
-            },
-            null,
-          ],
-        }}
-      >
-        <Tab.Screen
-          name="Users"
-          component={UsersPage}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <View
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Users
-                  width={25}
-                  height={25}
-                  fill={focused ? "#FFF" : "#A0A0A0"}
-                />
-                <Text style={{ color: "#000" }}>Users</Text>
-              </View>
-            ),
+  return (
+    fontsLoaded && (
+      <SafeAreaView style={{ flex: 1 }}>
+        <Tab.Navigator
+          screenOptions={{
+            headerShown: false,
+            tabBarShowLabel: false,
+
+            tabBarStyle: [
+              {
+                position: "absolute",
+                left: 60,
+                right: 60,
+                bottom: 20,
+                borderRadius: 15,
+                height: 70,
+              },
+              null,
+            ],
           }}
-        />
-        <Tab.Screen
-          name="Posts"
-          component={PostsPage}
-          options={{
-            tabBarIcon: ({ focused }) => (
-              <View
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Posts
-                  width={25}
-                  height={25}
-                  fill={focused ? "#FFF" : "#A0A0A0"}
-                />
-                <Text style={{ color: "#000" }}>Posts</Text>
-              </View>
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    </SafeAreaView>
+        >
+          <Tab.Screen
+            name="Users"
+            component={UsersPage}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Users
+                    width={25}
+                    height={25}
+                    fill={focused ? "#FFF" : "#A0A0A0"}
+                  />
+                  <CustomText fontWeight={focused ? "bold" : "normal"}>
+                    Users
+                  </CustomText>
+                </View>
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Posts"
+            component={PostsPage}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Posts
+                    width={25}
+                    height={25}
+                    fill={focused ? "#FFF" : "#A0A0A0"}
+                  />
+                  <CustomText fontWeight={focused ? "bold" : "normal"}>
+                    Posts
+                  </CustomText>
+                </View>
+              ),
+            }}
+          />
+        </Tab.Navigator>
+      </SafeAreaView>
+    )
   );
 }
