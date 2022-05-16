@@ -7,9 +7,12 @@ import CustomText from "./CustomText";
 //Assets import
 import RightArrow from "../assets/icons/arrow-right.svg";
 
-const User = ({name , userName , id , navigation}) => {
+const User = ({ name, userName, id, navigation }) => {
   return (
     <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("UsersDetails" , { id });
+      }}
       activeOpacity={0.8}
       style={{
         width: "90%",

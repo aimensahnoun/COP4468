@@ -19,8 +19,8 @@ import {
 } from "@expo-google-fonts/poppins";
 
 //Pages import
-import UsersPage from "./src/screens/users";
-import PostsPage from "./src/screens/posts";
+import UserStackNavigation from "./src/navigations/userNavigation";
+import PostStackNavigation from "./src/navigations/postNavigation";
 
 //Assets import
 import Users from "./src/assets/icons/users-alt.svg";
@@ -70,7 +70,7 @@ function MyApp() {
         >
           <Tab.Screen
             name="Users"
-            component={UsersPage}
+            component={UserStackNavigation}
             options={{
               tabBarIcon: ({ focused }) => (
                 <View
@@ -93,7 +93,7 @@ function MyApp() {
           />
           <Tab.Screen
             name="Posts"
-            component={PostsPage}
+            component={PostStackNavigation}
             options={{
               tabBarIcon: ({ focused }) => (
                 <View

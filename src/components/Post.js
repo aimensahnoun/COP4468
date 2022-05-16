@@ -24,6 +24,7 @@ const Post = ({ title, writerId, id, navigation }) => {
 
   return (
     <TouchableOpacity
+      onPress={() => navigation.navigate("PostDetails", { id })}
       activeOpacity={0.8}
       style={{
         width: "90%",
