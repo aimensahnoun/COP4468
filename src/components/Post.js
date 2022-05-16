@@ -27,7 +27,7 @@ const Post = ({ title, writerId, id, navigation }) => {
       onPress={() => navigation.navigate("PostDetails", { id })}
       activeOpacity={0.8}
       style={{
-        width: "90%",
+        width: "90%", 
         height: 90,
         alignSelf: "center",
         backgroundColor: "#fff",
