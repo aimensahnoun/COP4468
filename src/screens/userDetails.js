@@ -1,8 +1,15 @@
+//React import
+import { useEffect, useState } from "react";
+
 //React native import
 import { View, ScrollView, TouchableOpacity } from "react-native";
 
 //Custom component import
 import CustomText from "../components/CustomText";
+import LoadingSpinner from "../components/loadingSpinner";
+
+//Dependencies import
+import * as Linking from "expo-linking";
 
 //Assets import
 import LeftArrow from "../assets/icons/arrow-left.svg";
@@ -13,9 +20,29 @@ import Email from "../assets/icons/compose.svg";
 const UserDetails = ({ navigation, route }) => {
   const { id } = route.params;
 
-  console.log(id);
+  //Use state
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  return (
+  //Use effect
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await fetch(
+          `https://jsonplaceholder.typicode.com/users/${id}`
+        );
+        const data = await response.json();
+
+        setUser(data);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  return !isLoading ? (
     <ScrollView
       style={{
         flex: 1,
@@ -41,6 +68,7 @@ const UserDetails = ({ navigation, route }) => {
         <CustomText fontWeight="bold" fontSize={18}>
           Personal Information
         </CustomText>
+
         {/* Name Row */}
         <View
           style={{
@@ -50,7 +78,7 @@ const UserDetails = ({ navigation, route }) => {
           <CustomText fontWeight="medium" style={{ marginRight: 5 }}>
             Name:
           </CustomText>
-          <CustomText>Aimen Sahnoun</CustomText>
+          <CustomText>{user?.name}</CustomText>
         </View>
 
         {/* Username Row */}
@@ -62,8 +90,9 @@ const UserDetails = ({ navigation, route }) => {
           <CustomText fontWeight="medium" style={{ marginRight: 5 }}>
             Username:
           </CustomText>
-          <CustomText>Aimen.Sahnoun</CustomText>
+          <CustomText>@{user?.username}</CustomText>
         </View>
+
         {/* Email Row*/}
         <View
           style={{
@@ -73,8 +102,9 @@ const UserDetails = ({ navigation, route }) => {
           <CustomText fontWeight="medium" style={{ marginRight: 5 }}>
             Email:
           </CustomText>
-          <CustomText>aimen@sahnoun.com</CustomText>
+          <CustomText>{user?.email}</CustomText>
         </View>
+
         {/* Address Row Row*/}
         <View
           style={{
@@ -85,9 +115,11 @@ const UserDetails = ({ navigation, route }) => {
             Address:
           </CustomText>
           <CustomText style={{ width: 250 }}>
-            My Adress My Adress My Adress My Adress My Adress{" "}
+            {user?.address?.street}, {user?.address?.suite} ,{" "}
+            {user?.address?.city}
           </CustomText>
         </View>
+
         {/* Phone Row*/}
         <View
           style={{
@@ -97,7 +129,9 @@ const UserDetails = ({ navigation, route }) => {
           <CustomText fontWeight="medium" style={{ marginRight: 5 }}>
             Phone:
           </CustomText>
-          <CustomText style={{ width: 250 }}>Phone Number </CustomText>
+          <CustomText style={{ width: 250 }}>
+            {user?.phone.split(" ")[0]}{" "}
+          </CustomText>
         </View>
 
         {/* Action Buttons Row*/}
@@ -110,6 +144,7 @@ const UserDetails = ({ navigation, route }) => {
         >
           {/* Phone call button */}
           <TouchableOpacity
+            onPress={() => Linking.openURL(`tel:${user?.phone.split(" ")[0]}`)}
             activeOpacity={0.8}
             style={{
               width: 100,
@@ -134,6 +169,7 @@ const UserDetails = ({ navigation, route }) => {
 
           {/* Email button */}
           <TouchableOpacity
+            onPress={() => Linking.openURL(`mailto:${user?.email}`)}
             activeOpacity={0.8}
             style={{
               width: 100,
@@ -158,6 +194,11 @@ const UserDetails = ({ navigation, route }) => {
 
           {/* Map button */}
           <TouchableOpacity
+            onPress={() =>
+              Linking.openURL(
+                `https://www.google.com/maps/search/?api=1&query=${user?.address?.geo?.lat},${user?.address?.geo?.lng}`
+              )
+            }
             activeOpacity={0.8}
             style={{
               width: 100,
@@ -194,7 +235,7 @@ const UserDetails = ({ navigation, route }) => {
           <CustomText fontWeight="medium" style={{ marginRight: 5 }}>
             Website:
           </CustomText>
-          <CustomText>aimen@sahnoun.com</CustomText>
+          <CustomText>{user?.website}</CustomText>
         </View>
 
         {/* Company Name Row*/}
@@ -206,9 +247,7 @@ const UserDetails = ({ navigation, route }) => {
           <CustomText fontWeight="medium" style={{ marginRight: 5 }}>
             Name:
           </CustomText>
-          <CustomText style={{ width: 250 }}>
-            My Adress My Adress My Adress My Adress My Adress{" "}
-          </CustomText>
+          <CustomText style={{ width: 250 }}>{user?.company?.name}</CustomText>
         </View>
 
         {/* Company Slogan Row*/}
@@ -221,7 +260,7 @@ const UserDetails = ({ navigation, route }) => {
             Slogan:
           </CustomText>
           <CustomText style={{ width: 250 }}>
-            My Adress My Adress My Adress My Adress My Adress{" "}
+            {user?.company?.catchPhrase}
           </CustomText>
         </View>
 
@@ -232,16 +271,14 @@ const UserDetails = ({ navigation, route }) => {
           }}
         >
           <CustomText fontWeight="medium" style={{ marginRight: 5 }}>
-            Market:
+            Business:
           </CustomText>
-          <CustomText style={{ width: 250 }}>
-            My Adress My Adress My Adress My Adress My Adress{" "}
-          </CustomText>
+          <CustomText style={{ width: 250 }}>{user?.company?.bs}</CustomText>
         </View>
-
-
       </View>
     </ScrollView>
+  ) : (
+    <LoadingSpinner />
   );
 };
 
