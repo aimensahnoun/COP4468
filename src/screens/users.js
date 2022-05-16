@@ -1,18 +1,75 @@
-
+//React import
+import { useState, useEffect } from "react";
 
 //React Native import
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, FlatList } from "react-native";
 
 //Custom Components import
 import User from "../components/User";
+import LoadingSpinner from "../components/loadingSpinner";
+import CustomText from "../components/CustomText";
 
-const UsersPage = () => {
-  return (
-    <ScrollView>
-      <View style={styles.container}>
-        <User />
-      </View>
-    </ScrollView>
+const UsersPage = ({ navigation }) => {
+  //Use State
+  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  //Use Effect
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await fetch(
+          "https://jsonplaceholder.typicode.com/users"
+        );
+        const data = await response.json();
+        setUsers(data);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  //Helper functions
+  const renderItem = ({ item }) => (
+    <User
+      name={item.name}
+      userName={item.username}
+      navigation={navigation}
+      id={item.id}
+    />
+  );
+
+  return !isLoading ? (
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
+      <CustomText
+        fontWeight="bold"
+        fontSize={20}
+        style={{
+          marginHorizontal: 20,
+        }}
+      >
+        Users
+      </CustomText>
+      <FlatList
+        contentContainerStyle={{
+          paddingBottom: 100,
+        }}
+        showsVerticalScrollIndicator={false}
+        data={users}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+        contentInset={{ right: 20, top: 0, left: 20, bottom: 0 }}
+      />
+    </View>
+  ) : (
+    <LoadingSpinner />
   );
 };
 

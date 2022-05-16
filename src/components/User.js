@@ -7,27 +7,30 @@ import CustomText from "./CustomText";
 //Assets import
 import RightArrow from "../assets/icons/arrow-right.svg";
 
-const User = () => {
+const User = ({name , userName , id , navigation}) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={{
-        width: "100%",
+        width: "90%",
         height: 90,
+        alignSelf: "center",
         backgroundColor: "#fff",
         borderRadius: 15,
         elevation: 3,
         flexDirection: "row",
         paddingHorizontal: 15,
         alignItems: "center",
+        marginVertical: 5,
+
         justifyContent: "space-between",
       }}
     >
       <View>
         <CustomText fontSize={16} fontWeight="bold">
-          Aimen Sahnoun
+          {name}
         </CustomText>
-        <CustomText fontSize={13}>@AimenSahnoun</CustomText>
+        <CustomText fontSize={13}>@{userName}</CustomText>
       </View>
       <RightArrow width={45} height={45} />
     </TouchableOpacity>
