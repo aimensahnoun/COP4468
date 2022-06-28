@@ -13,6 +13,8 @@ import CustomText from "../components/CustomText";
 import { useRecoilState } from "recoil";
 import { UsersState } from "../recoil/state";
 
+import axios from "axios";
+
 const UsersPage = ({ navigation }) => {
   //Use State
   const [users, setUsers] = useState([]);
@@ -27,10 +29,10 @@ const UsersPage = ({ navigation }) => {
     (async () => {
       try {
         
-        const response = await fetch(
+        const response = await axios.get(
           "https://jsonplaceholder.typicode.com/users"
         );
-        const data = await response.json();
+        const data = await response.data;
         setUsers(data);
         setUsersState(data);
         setIsLoading(false);

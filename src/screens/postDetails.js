@@ -16,6 +16,7 @@ import { UsersState } from "../recoil/state";
 import LeftArrow from "../assets/icons/arrow-left.svg";
 import Pen from "../assets/icons/pen.svg";
 
+
 const PostDetails = ({ navigation, route }) => {
   const { id } = route.params;
 

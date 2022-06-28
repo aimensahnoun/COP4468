@@ -13,6 +13,8 @@ import Post from "../components/Post";
 import { useRecoilState } from "recoil";
 import { postState } from "../recoil/state";
 
+import axios from "axios";
+
 const PostsPage = ({ navigation }) => {
   //Use State
   const [posts, setPosts] = useState([]);
@@ -26,10 +28,10 @@ const PostsPage = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch(
+        const response = await axios(
           "https://jsonplaceholder.typicode.com/posts"
         );
-        const data = await response.json();
+        const data = response.data;
         //Limiting the number of posts to 20
         const customData = data.slice(0, 20);
         setPosts(customData);
