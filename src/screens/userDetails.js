@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 
 //React native import
-import { View, ScrollView, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, FlatList } from "react-native";
+import { ScrollView } from "react-native-virtualized-view";
 
 //Custom component import
 import CustomText from "../components/CustomText";
@@ -10,12 +11,14 @@ import LoadingSpinner from "../components/loadingSpinner";
 
 //Dependencies import
 import * as Linking from "expo-linking";
+import axios from "axios";
 
 //Assets import
 import LeftArrow from "../assets/icons/arrow-left.svg";
 import Phone from "../assets/icons/phone.svg";
 import Map from "../assets/icons/map-marker.svg";
 import Email from "../assets/icons/compose.svg";
+import RightArrow from "../assets/icons/arrow-right.svg";
 
 const UserDetails = ({ navigation, route }) => {
   const { id } = route.params;
@@ -23,15 +26,28 @@ const UserDetails = ({ navigation, route }) => {
   //Use state
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [userAlbums, setUserAlbums] = useState([]);
 
   //Use effect
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch(
+        const response = await axios(
           `https://jsonplaceholder.typicode.com/users/${id}`
         );
-        const data = await response.json();
+        const data = await response.data;
+
+        const albumsResponse = await axios(
+          "https://jsonplaceholder.typicode.com/albums"
+        );
+        const albumsData = await albumsResponse.data;
+
+        const filteredAlbums = albumsData.filter(
+          (album) => album.userId === id
+        );
+
+        setUserAlbums(filteredAlbums);
 
         setUser(data);
         setIsLoading(false);
@@ -44,13 +60,14 @@ const UserDetails = ({ navigation, route }) => {
 
   return !isLoading ? (
     <ScrollView
+      nestedScrollEnabled={true}
       style={{
         flex: 1,
         backgroundColor: "#fff",
       }}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
-        paddingBottom: 120,
+        paddingBottom: 100,
       }}
     >
       <View
@@ -275,6 +292,88 @@ const UserDetails = ({ navigation, route }) => {
           </CustomText>
           <CustomText style={{ width: 250 }}>{user?.company?.bs}</CustomText>
         </View>
+
+        <View
+          style={{
+            width: "70%",
+            alignSelf: "center",
+            marginVertical: 20,
+            backgroundColor: "#f1f1f1",
+            height: 60,
+            elevation: 5,
+            borderRadius: 10,
+            padding: 5,
+            justifyContent: "space-between",
+            flexDirection: "row",
+          }}
+        >
+          {/* Albums */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => setTabIndex(0)}
+            style={{
+              width: "48%",
+              height: "100%",
+              backgroundColor: tabIndex === 0 ? "#000" : "transparent",
+              borderRadius: 10,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CustomText
+              fontWeight={tabIndex === 0 ? "bold" : "normal"}
+              style={{ color: tabIndex === 0 ? "#fff" : "#000" }}
+            >
+              Albums
+            </CustomText>
+          </TouchableOpacity>
+          {/* TODO */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => setTabIndex(1)}
+            style={{
+              width: "48%",
+              height: "100%",
+              backgroundColor: tabIndex === 1 ? "#000" : "transparent",
+              borderRadius: 10,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CustomText
+              fontWeight={tabIndex === 1 ? "bold" : "normal"}
+              style={{ color: tabIndex === 1 ? "#fff" : "#000" }}
+            >
+              TODO
+            </CustomText>
+          </TouchableOpacity>
+        </View>
+        {
+          tabIndex === 0 &&
+          <FlatList
+            data={userAlbums}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <CustomText
+                  style={{
+                    width: "80%",
+                  }}
+                >
+                  {item.title}
+                </CustomText>
+                <RightArrow width={45} height={45} />
+              </TouchableOpacity>
+            )}
+          />
+        }
       </View>
     </ScrollView>
   ) : (
