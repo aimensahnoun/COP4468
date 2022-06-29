@@ -366,6 +366,7 @@ const UserDetails = ({ navigation, route }) => {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <TouchableOpacity
+                onPress={() => navigation.navigate("PhotosPage", { id : item.id })}
                 activeOpacity={0.8}
                 style={{
                   flexDirection: "row",
