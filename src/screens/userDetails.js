@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 //React native import
-import { View, TouchableOpacity, FlatList } from "react-native";
+import { View, TouchableOpacity, FlatList, CheckBox } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
 
 //Custom component import
@@ -12,6 +12,7 @@ import LoadingSpinner from "../components/loadingSpinner";
 //Dependencies import
 import * as Linking from "expo-linking";
 import axios from "axios";
+import Checkbox from "expo-checkbox";
 
 //Assets import
 import LeftArrow from "../assets/icons/arrow-left.svg";
@@ -28,6 +29,7 @@ const UserDetails = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
   const [userAlbums, setUserAlbums] = useState([]);
+  const [userTodos, setUserTodos] = useState([]);
 
   //Use effect
   useEffect(() => {
@@ -47,7 +49,17 @@ const UserDetails = ({ navigation, route }) => {
           (album) => album.userId === id
         );
 
+        console.log(filteredAlbums.length);
         setUserAlbums(filteredAlbums);
+
+        const todosResponse = await axios(
+          "https://jsonplaceholder.typicode.com/todos"
+        );
+        const todosData = await todosResponse.data;
+
+        const filteredTodos = todosData.filter((todo) => todo.userId === id);
+        console.log(filteredTodos.length);
+        setUserTodos(filteredTodos);
 
         setUser(data);
         setIsLoading(false);
@@ -348,8 +360,7 @@ const UserDetails = ({ navigation, route }) => {
             </CustomText>
           </TouchableOpacity>
         </View>
-        {
-          tabIndex === 0 &&
+        {tabIndex === 0 ? (
           <FlatList
             data={userAlbums}
             keyExtractor={(item) => item.id}
@@ -373,7 +384,34 @@ const UserDetails = ({ navigation, route }) => {
               </TouchableOpacity>
             )}
           />
-        }
+        ) : (
+          <FlatList
+            data={userTodos}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Checkbox
+                  value={item.completed}
+                  color={item.completed ? "#4630EB" : undefined}
+                />
+                <CustomText
+                  style={{
+                    width: "80%",
+                  }}
+                >
+                  {item.title}
+                </CustomText>
+              </TouchableOpacity>
+            )}
+          />
+        )}
       </View>
     </ScrollView>
   ) : (
