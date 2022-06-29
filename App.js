@@ -7,6 +7,8 @@ import { RecoilRoot } from "recoil";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+
+
 //Custom Components import
 import CustomText from "./src/components/CustomText";
 
